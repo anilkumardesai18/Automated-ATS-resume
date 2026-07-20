@@ -1,161 +1,116 @@
-# 🎯 AI Resume ATS Scorer & Screening Agent
+<div align="center">
+  <h1>🎯 AI Resume ATS Scorer & Screening Agent</h1>
+  <p><strong>Selection Round Submission — Junior AI Research Associate</strong></p>
 
-> **Selection Round Submission — Junior AI Research Associate**
-> 
-> **One-Sentence Agent Job Statement:**  
-> *"My agent takes a candidate's resume (PDF/DOCX/DOC) and an optional job description, performs NLP entity extraction and Sentence-BERT semantic similarity matching, and produces a comprehensive ATS score breakdown, actionable suggestions, and context-aware chat coaching."*
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python" />
+    <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white" alt="Streamlit" />
+    <img src="https://img.shields.io/badge/Groq-LLaMA_3-orange.svg" alt="Groq" />
+    <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
+    <img src="https://img.shields.io/badge/spaCy-09A3D5?style=flat&logo=spacy&logoColor=white" alt="spaCy" />
+  </p>
+
+  <p>
+    <em>"An intelligent end-to-end agent that screens candidate resumes, evaluates semantic fit, and provides an interactive AI coaching loop."</em>
+  </p>
+</div>
 
 ---
 
 ## 📋 Table of Contents
-1. [Agent Architecture & Capabilities](#-agent-architecture--capabilities)
-2. [Step-by-Step System Design](#-step-by-step-system-design)
-   - [Step 1: One Job & Expected Capabilities](#step-1-one-job--expected-capabilities)
-   - [Step 2: Model & API Setup](#step-2-model--api-setup)
-   - [Step 3: System Prompts](#step-3-system-prompts)
-   - [Step 4: Data & Tools (RAG & Parsing)](#step-4-data--tools-rag--parsing)
-   - [Step 5: Agent Loop Architecture](#step-5-agent-loop-architecture)
-   - [Step 6: Installation & Execution Guide](#step-6-installation--execution-guide)
-3. [Sample Inputs & Outputs](#-sample-inputs--outputs)
-4. [Design Tradeoffs & Engineering Decisions](#-design-tradeoffs--engineering-decisions)
-5. [Evaluation Rubric Alignment](#-evaluation-rubric-alignment)
+- [✨ Agent Architecture & Capabilities](#-agent-architecture--capabilities)
+- [🛠️ Step-by-Step System Design](#-step-by-step-system-design)
+- [🚀 Installation & Execution Guide](#-installation--execution-guide)
+- [📊 Sample Inputs & Outputs](#-sample-inputs--outputs)
+- [⚖️ Design Tradeoffs & Engineering Decisions](#️-design-tradeoffs--engineering-decisions)
+- [🎯 Evaluation Rubric Alignment](#-evaluation-rubric-alignment)
 
 ---
 
-## 🏗️ Agent Architecture & Capabilities
+## ✨ Agent Architecture & Capabilities
 
-The **AI Resume ATS Screening Agent** is an end-to-end intelligence system that screens candidates, parses unstructured documents, measures semantic fit against job requirements, and provides an interactive coaching loop.
+The **AI Resume ATS Screening Agent** is an intelligence system designed to screen candidates, parse unstructured documents, measure semantic fit against job requirements, and provide an interactive coaching loop.
 
+```mermaid
+graph TD
+    A[User Input] -->|Upload Resume / Paste JD / Query Chat| B(Parsing & NLP Extraction)
+    B -->|pdfplumber / python-docx / spaCy| C(Semantic Vector Embedding)
+    C -->|Sentence Transformers: all-MiniLM-L6| D(Scoring & Feedback Engine)
+    D -->|ATS Weights + Cosine Similarity| E(LLM Agent & RAG Loop)
+    E -->|Groq Llama-3.3-70b + Supabase Context| F[Outputs]
+    F -->|Web Dashboard / CLI Agent / PDF Report| G{End User}
+    
+    classDef primary fill:#4F46E5,stroke:#3730A3,stroke-width:2px,color:#fff;
+    classDef secondary fill:#0ea5e9,stroke:#0284c7,stroke-width:2px,color:#fff;
+    classDef output fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff;
+    
+    A:::primary
+    B:::secondary
+    C:::secondary
+    D:::secondary
+    E:::secondary
+    F:::output
 ```
-                  ┌─────────────────────────────────────────┐
-                  │            User Input                   │
-                  │ (Upload Resume / Paste JD / Query Chat) │
-                  └────────────────────┬────────────────────┘
-                                       │
-                                       ▼
-                  ┌─────────────────────────────────────────┐
-                  │          Parsing & NLP Extraction       │
-                  │   (pdfplumber / python-docx / spaCy)    │
-                  └────────────────────┬────────────────────┘
-                                       │
-                                       ▼
-                  ┌─────────────────────────────────────────┐
-                  │       Semantic Vector Embedding         │
-                  │ (Sentence Transformers: all-MiniLM-L6)  │
-                  └────────────────────┬────────────────────┘
-                                       │
-                                       ▼
-                  ┌─────────────────────────────────────────┐
-                  │         Scoring & Feedback Engine       │
-                  │  (ATS Weights + Cosine Similarity Match)│
-                  └────────────────────┬────────────────────┘
-                                       │
-                                       ▼
-                  ┌─────────────────────────────────────────┐
-                  │           LLM Agent & RAG Loop          │
-                  │   (Groq Llama-3.3-70b + Supabase Context)│
-                  └────────────────────┬────────────────────┘
-                                       │
-                                       ▼
-                  ┌─────────────────────────────────────────┐
-                  │               Outputs                   │
-                  │ (Web Dashboard / CLI Agent / PDF Report)│
-                  └─────────────────────────────────────────┘
-```
+
+### Core Capabilities
+1. **📄 Document Parsing**: Extracts text from `.pdf`, `.docx`, and `.doc` files.
+2. **🧠 Entity & Skill Extraction**: Uses `spaCy` (`en_core_web_md`) to extract technical skills, experience metrics, education, and action verbs.
+3. **📐 Semantic Similarity Matching**: Uses Sentence Transformers (`all-MiniLM-L6-v2`) to compute high-dimensional embeddings and cosine similarity against job descriptions.
+4. **💯 Multi-Category ATS Scoring**: Evaluates candidates across Formatting (20%), Keyword Matching (25%), Content Quality (25%), Skill Validation (15%), and ATS Compatibility (15%).
+5. **🤖 Interactive Coaching Agent Loop**: Provides continuous `Input → Think → Act → Output` loops via Streamlit Web UI and a CLI script.
+6. **💾 Report Generation & Persistence**: Generates downloadable PDF reports and saves session histories to Supabase.
 
 ---
 
 ## 🛠️ Step-by-Step System Design
 
-### Step 1: One Job & Expected Capabilities
-- **Core Job**: Automated ATS resume screening, scoring, and candidate optimization.
-- **Capabilities**:
-  1. **Document Parsing**: Extracts text from `.pdf`, `.docx`, and `.doc` files.
-  2. **Entity & Skill Extraction**: Uses spaCy (`en_core_web_md`) to extract technical skills, experience metrics, education, and action verbs.
-  3. **Semantic Similarity Matching**: Uses Sentence Transformers (`all-MiniLM-L6-v2`) to compute high-dimensional vector embeddings and cosine similarity against job descriptions.
-  4. **Multi-Category ATS Scoring**: Evaluates candidates across 5 key dimensions:
-     - **Formatting** (20%)
-     - **Keyword Matching** (25%)
-     - **Content Quality** (25%)
-     - **Skill Validation** (15%)
-     - **ATS Compatibility** (15%)
-  5. **Interactive Coaching Agent Loop**: Provides continuous Input → Think → Act → Output loops via both a Streamlit Web UI and a CLI script.
-  6. **Report Generation & Persistence**: Generates downloadable PDF reports (WeasyPrint) and saves session histories to Supabase.
-
----
-
-### Step 2: Model & API Setup
-The agent combines deterministic local NLP with cloud-hosted LLM reasoning:
-- **LLM Engine**: Groq API (`llama-3.3-70b-versatile` / `llama-3-8b-8192`) via official `groq` SDK for fast, low-latency suggestions and parsing.
-- **Primary NLP Model**: spaCy `en_core_web_md` for named entity recognition (NER) and token matching.
+### 1. Model & API Setup
+- **LLM Engine**: [Groq API](https://groq.com/) (`llama-3.3-70b-versatile`) via the official `groq` SDK for extremely fast, low-latency parsing and conversational suggestions.
+- **Primary NLP Model**: `spaCy` (`en_core_web_md`) for Named Entity Recognition (NER) and token matching.
 - **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2` (768-dimensional embeddings) for dense semantic vector matching.
 
----
+### 2. System Prompts
+The agent utilizes structured prompts to ensure deterministic JSON outputs for backend parsing and persona-consistent responses for coaching.
+> **AI Coach Persona:**  
+> *"You are an expert ATS Resume Coach. Help the user optimize their resume, giving highly professional, detailed, and actionable advice. Use lists and bullet points."*
 
-### Step 3: System Prompts
-The agent utilizes structured system prompts to ensure deterministic JSON outputs for parsing and persona-consistent responses for coaching.
-
-#### 1. Resume Parsing System Prompt
-```text
-You are a resume parser. Extract information from the resume and return ONLY a valid JSON object. No explanation, no markdown.
-```
-
-#### 2. AI Coach Persona Prompt
-```text
-You are an expert ATS Resume Coach. Help the user optimize their resume, giving highly professional, detailed, and actionable advice. Use lists and bullet points.
-```
-
----
-
-### Step 4: Data & Tools (RAG & Parsing)
-- **Document Extractors**: `pdfplumber`, `PyPDF2`, `python-docx`.
-- **Validation Tools**: Custom regex checkers for quantifiable metrics (e.g. percentages, metrics), action verbs, and contact headers.
-- **Database & Storage**: Supabase PostgREST API and Auth for persisting past candidate screenings (`public.analyses`).
-
----
-
-### Step 5: Agent Loop Architecture
+### 3. Agent Loop Architecture
 The system supports two execution loops implementing the **Input → Think → Act → Output** cycle:
-
-1. **Streamlit Web UI (`frontend/views/coach.py`)**:
-   - *Input*: User queries via `st.chat_input()`.
-   - *Think*: Reads candidate's past analysis history from Supabase for context.
-   - *Act*: Posts prompt + context payload to FastAPI backend (`/api/v1/coach/chat`), invoking Groq.
-   - *Output*: Renders response in interactive chat bubbles using `st.chat_message()`.
-
-2. **Terminal CLI Agent (`cli_agent.py`)**:
-   - *Input*: Terminal prompt `> What's your question?`.
-   - *Think*: Queries Supabase history for candidate metrics.
-   - *Act*: Invokes Groq API.
-   - *Output*: Prints formatted advice directly to the console.
+- **Streamlit Web UI** (`frontend/views/coach.py`): Posts context payload to FastAPI backend (`/api/v1/coach/chat`), invoking Groq. Renders in interactive chat bubbles.
+- **Terminal CLI Agent** (`cli_agent.py`): Queries Supabase history, invokes Groq, and prints formatted advice to the console directly.
 
 ---
 
-### Step 6: Installation & Execution Guide
+## 🚀 Installation & Execution Guide
 
-#### 1. Prerequisites
-- Python 3.10+
-- Git
+### 1. Prerequisites
+- **Python 3.10+**
+- **Git**
 
-#### 2. Clone & Setup Virtual Environment
-```powershell
-git clone <your-repo-url>
-cd ai-resume-ats-main
+### 2. Clone & Setup
+```bash
+git clone https://github.com/anilkumardesai18/Automated-ATS-resume.git
+cd Automated-ATS-resume
 python -m venv venv
+
+# Windows
 .\venv\Scripts\Activate.ps1
+# Linux/Mac
+source venv/bin/activate
 ```
 
-#### 3. Install Dependencies & NLP Models
-```powershell
+### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
 python -m spacy download en_core_web_md
 pip install python-magic-bin
 ```
 
-#### 4. Configure Environment Variables
+### 4. Configure Environment
 Create a `.env` file in the root directory:
 ```env
-SUPABASE_URL="https://aiqxaizswjifbfikzmon.supabase.co"
+SUPABASE_URL="https://<your-id>.supabase.co"
 SUPABASE_KEY="your-supabase-service-role-key"
 SUPABASE_ANON_KEY="your-supabase-anon-key"
 SUPABASE_JWT_SECRET="your-supabase-jwt-secret"
@@ -164,8 +119,8 @@ PORT=8000
 HOST=0.0.0.0
 ```
 
-#### 5. Database Table Setup (Supabase)
-Run the following query in your Supabase SQL Editor to create the required table:
+### 5. Database Setup (Supabase)
+Execute this query in your Supabase SQL Editor:
 ```sql
 create table public.analyses (
   id bigint generated by default as identity primary key,
@@ -181,21 +136,22 @@ create table public.analyses (
 alter table public.analyses enable row level security;
 ```
 
-#### 6. Run the Application
+### 6. Run the Application
 
-##### Option A: Web Application (FastAPI + Streamlit)
-1. **Start Backend Server**:
-   ```powershell
-   .\venv\Scripts\uvicorn.exe backend.main:app --host 0.0.0.0 --port 8000
-   ```
-2. **Start Frontend Client** (in a new terminal):
-   ```powershell
-   .\venv\Scripts\streamlit.exe run frontend\streamlit_app.py
-   ```
-   *Access the web app at `http://localhost:8501`.*
+#### Option A: Web Application (FastAPI + Streamlit)
+Open two terminals.
+**Terminal 1 (Backend):**
+```bash
+.\venv\Scripts\uvicorn.exe backend.main:app --host 0.0.0.0 --port 8000
+```
+**Terminal 2 (Frontend):**
+```bash
+.\venv\Scripts\streamlit.exe run frontend\streamlit_app.py
+```
+*(Access the web app at `http://localhost:8501`)*
 
-##### Option B: Interactive CLI Agent Loop
-```powershell
+#### Option B: Interactive CLI Agent Loop
+```bash
 .\venv\Scripts\python.exe cli_agent.py
 ```
 
@@ -203,16 +159,9 @@ alter table public.analyses enable row level security;
 
 ## 📊 Sample Inputs & Outputs
 
-### Sample API Health Check Output
-```json
-{
-  "status": "healthy",
-  "nlp_loaded": true,
-  "embedder_loaded": true
-}
-```
+<details>
+<summary><b>View API Screening Result Response</b></summary>
 
-### Sample Screening Result Response (`POST /api/v1/analyze-resume`)
 ```json
 {
   "ATS_score": 85.0,
@@ -231,13 +180,15 @@ alter table public.analyses enable row level security;
     "match_percentage": 82.5,
     "semantic_similarity": 0.842,
     "matched_keywords": ["Python", "FastAPI", "React", "Docker"],
-    "missing_keywords": ["Kubernetes", "CI/CD", "GraphQL"],
-    "skills_gap": ["Kubernetes", "GraphQL"]
+    "missing_keywords": ["Kubernetes", "CI/CD", "GraphQL"]
   }
 }
 ```
+</details>
 
-### Sample CLI Agent Output
+<details>
+<summary><b>View CLI Agent Output</b></summary>
+
 ```text
 =============================================
       ATS RESUME AI COACH ACTIVE
@@ -259,26 +210,18 @@ Thinking...
    - Instead of 'Worked with Docker', write 'Containerized 5 microservices using Docker, reducing deployment time by 40%'.
 --------------------------------------------
 ```
+</details>
 
 ---
 
 ## ⚖️ Design Tradeoffs & Engineering Decisions
 
-1. **Hybrid Architecture (spaCy + Sentence Transformers + LLM)**:
-   - *Tradeoff*: Rather than passing raw text directly to an expensive LLM for full scoring, we use spaCy for deterministic parsing and Sentence Transformers for embedding similarity.
-   - *Reasoning*: Reduces LLM API costs, eliminates score hallucinations, guarantees reproducible metrics, and speeds up analysis.
-
-2. **Model Choice (`all-MiniLM-L6-v2` vs `all-mpnet-base-v2`)**:
-   - *Tradeoff*: `all-MiniLM-L6-v2` is 5x smaller (~80 MB) and significantly faster than `all-mpnet-base-v2` (~438 MB).
-   - *Reasoning*: As evaluated in `jupyter notebooks/02_BERT_EMBEDDINGS.ipynb`, `MiniLM` provides comparable cosine similarity accuracy while enabling fast cold-starts on local developer hardware.
-
-3. **Database Selection (Supabase / PostgREST)**:
-   - *Tradeoff*: Used Supabase REST endpoints instead of traditional ORMs (e.g. SQLAlchemy).
-   - *Reasoning*: Keeps backend stateless, leverages Supabase Row Level Security (RLS), and allows seamless JWT verification across Streamlit and FastAPI.
-
-4. **Graceful Degradation for Windows GTK Dependencies**:
-   - *Tradeoff*: WeasyPrint requires GTK+ C-libraries for PDF rendering.
-   - *Reasoning*: Handled import exceptions to allow core scoring and AI coaching to run without crashing when GTK+ is missing, while providing automated `winget` installation scripts.
+| Decision | Tradeoff & Reasoning |
+| :--- | :--- |
+| **Hybrid NLP + LLM Architecture** | **Tradeoff:** Instead of passing raw text directly to an expensive LLM for full scoring, we use `spaCy` for deterministic parsing and Sentence Transformers for embedding similarity.<br>**Reasoning:** Reduces API costs, eliminates score hallucinations, guarantees reproducible metrics, and speeds up the analysis phase. |
+| **Model Choice (`all-MiniLM-L6-v2`)** | **Tradeoff:** `MiniLM` is 5x smaller (~80 MB) than `all-mpnet-base-v2` (~438 MB).<br>**Reasoning:** Provides comparable cosine similarity accuracy while enabling fast cold-starts and low memory footprint on developer hardware. |
+| **Stateless REST (Supabase)** | **Tradeoff:** Used Supabase PostgREST endpoints instead of traditional ORMs (like SQLAlchemy).<br>**Reasoning:** Keeps backend stateless, leverages Supabase Row Level Security (RLS), and allows seamless JWT verification across services. |
+| **Graceful Degradation** | **Tradeoff:** WeasyPrint PDF generation requires GTK+ C-libraries, which Windows lacks by default.<br>**Reasoning:** Handled `OSError` exceptions to allow core scoring and AI coaching to run without crashing, providing users with actionable `winget` installation prompts instead. |
 
 ---
 
@@ -286,10 +229,13 @@ Thinking...
 
 | Rubric Criteria | Weight | Implementation Highlights |
 | :--- | :---: | :--- |
-| **Working end-to-end resume screening agent** | **30** | Full pipeline: Document parsing, skill extraction, semantic matching, ATS score calculation, report generation, and interactive web/CLI agent loops. |
-| **Approach, NLP similarity method, and model choice** | **25** | Dense vector embeddings via Sentence Transformers, cosine similarity matching, spaCy NER tokenization, and Groq `llama-3.3-70b` LLM suggestions. |
-| **Code quality and organization** | **20** | Clean directory structure separating FastAPI backend services, Streamlit frontend views, Pydantic schemas, and research notebooks. |
-| **README clarity and reproducibility** | **15** | Clear installation instructions, environment setup, database queries, and step-by-step verification commands. |
-| **Tradeoff notes and reasoning** | **10** | Detailed engineering breakdown explaining hybrid scoring, model selection benchmarks, and stateless API design. |
-#   A u t o m a t e d - A T S - r e s u m e  
- 
+| **Working end-to-end agent** | **30** | Full pipeline: Document parsing, extraction, semantic matching, ATS score calculation, report generation, and interactive loops. |
+| **NLP & Model Approach** | **25** | Dense vector embeddings via Sentence Transformers, cosine similarity matching, spaCy NER tokenization, and Groq `llama-3.3-70b`. |
+| **Code Quality & Org.** | **20** | Clean directory structure separating FastAPI backend services, Streamlit frontend views, Pydantic schemas, and research notebooks. |
+| **README Reproducibility** | **15** | Clear installation instructions, environment setup, database queries, and step-by-step execution commands. |
+| **Tradeoffs & Reasoning** | **10** | Detailed engineering breakdown explaining hybrid scoring, model selection benchmarks, and stateless API design. |
+
+<div align="center">
+  <br/>
+  <p><i>Built for the Junior AI Research Associate Challenge</i></p>
+</div>
