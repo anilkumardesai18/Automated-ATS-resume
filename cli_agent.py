@@ -45,7 +45,7 @@ async def run_agent_loop():
         print("Note: Supabase is not fully configured. Running in stand-alone mode.")
         
     print("\n=============================================")
-    print("      ATS RESUME AI COACH ACTIVE")
+    print("      RESUME SCREENING AI COACH ACTIVE")
     print("=============================================")
     print("Ask me questions about optimizing your CV, ATS scoring,")
     print("formatting tips, or matching job descriptions.")
@@ -64,7 +64,7 @@ async def run_agent_loop():
             print("Thinking...")
             
             system_prompt = (
-                "You are an expert ATS Resume Coach. Help the user optimize their resume. "
+                "You are an expert Resume Screening Coach. Help the user optimize their resume. "
                 "Provide detailed, structured, and actionable feedback. Use bullet points and lists.\n\n"
             )
             if context:

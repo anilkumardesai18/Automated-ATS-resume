@@ -1,4 +1,4 @@
-# ATS Resume Scorer — combined backend + frontend dependencies.
+# Resume Screening Agent — combined backend + frontend dependencies.
 #
 # Install with:
 #     pip install -r requirements.txt

@@ -12,7 +12,7 @@ except ImportError:
     pass
 
 #api metadata
-APP_TITLE='ATS RESUME ANALYZER API'
+APP_TITLE='RESUME SCREENING AGENT API'
 APP_VERSION='1.0.0'
 APP_DESCRIPTION='analyse resumes against job description using nlp + ml'
 

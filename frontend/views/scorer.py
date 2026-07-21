@@ -153,7 +153,7 @@ def _render_export_buttons(analysis: dict) -> None:
 
 
 def render() -> None:
-    st.title("🎯 ATS Resume Scorer")
+    st.title("🎯 Resume Screening Agent")
     st.markdown("Upload your resume — and optionally a job description — for a comprehensive analysis.")
 
     with st.sidebar:

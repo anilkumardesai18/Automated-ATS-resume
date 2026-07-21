@@ -246,7 +246,7 @@ async def coach_chat(
             context += f"- File: {entry['filename']}, ATS Score: {entry['ats_score']}/100, Missing Keywords: {entry['missing_keywords']}\n"
             
     system_prompt = (
-        "You are an expert ATS Resume Coach. Help the user optimize their resume, "
+        "You are an expert Resume Screening Coach. Help the user optimize their resume, "
         "giving highly professional, detailed, and actionable advice. Use lists and bullet points.\n\n"
     )
     if context:

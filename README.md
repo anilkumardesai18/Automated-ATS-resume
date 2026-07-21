@@ -73,7 +73,7 @@ graph TD
 ### 2. System Prompts
 The agent utilizes structured prompts to ensure deterministic JSON outputs for backend parsing and persona-consistent responses for coaching.
 > **AI Coach Persona:**  
-> *"You are an expert ATS Resume Coach. Help the user optimize their resume, giving highly professional, detailed, and actionable advice. Use lists and bullet points."*
+> *"You are an expert Resume Screening Coach. Help the user optimize their resume, giving highly professional, detailed, and actionable advice. Use lists and bullet points."*
 
 ### 3. Agent Loop Architecture
 The system supports two execution loops implementing the **Input → Think → Act → Output** cycle:
@@ -90,8 +90,8 @@ The system supports two execution loops implementing the **Input → Think → A
 
 ### 2. Clone & Setup
 ```bash
-git clone https://github.com/anilkumardesai18/Automated-ATS-resume.git
-cd Automated-ATS-resume
+git clone https://github.com/anilkumardesai18/Resume-Screening-Agent.git
+cd Resume-Screening-Agent
 python -m venv venv
 
 # Windows
@@ -191,7 +191,7 @@ Open two terminals.
 
 ```text
 =============================================
-      ATS RESUME AI COACH ACTIVE
+      RESUME SCREENING AI COACH ACTIVE
 =============================================
 Ask me questions about optimizing your CV, ATS scoring,
 formatting tips, or matching job descriptions.

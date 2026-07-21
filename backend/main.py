@@ -17,7 +17,7 @@ logger=logging.getLogger('ats_resume_scorer')
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    logger.info('Starting ATS Resume Analyzer API...')
+    logger.info('Starting Resume Screening Agent API...')
 
     logger.info(f'Loading spaCy NLP model: {SPACY_MODEL_PRIMARY}')
     import spacy
@@ -63,7 +63,7 @@ app.include_router(router)
 @app.get('/')
 async def root():
     return {
-        'name':      'ATS Resume Analyzer API',
+        'name':      'Resume Screening Agent API',
         'version':   '2.0.0',
         'endpoints': {
             'POST   /api/v1/analyze-resume': 'Analyze a resume',
